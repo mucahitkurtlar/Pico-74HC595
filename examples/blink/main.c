@@ -19,64 +19,45 @@ SER         GP12
 OE          GND
 RCLK        GP10
 SRCLK       GP11
-CRCLR       3.3V
+SRCLR       3.3V
 
 
 author: Mücahit KURTLAR
+license: GNU GENERAL PUBLIC LICENSE Version 3
 */
 
 #include "pico/stdlib.h"
-#include "../../src/shift_register.h"
+#include "../../src/shift_register_74hc595.h"
+
+// Define shift register pins
+#define CLK_PIN 11
+#define DATA_PIN 12
+#define LATCH_PIN 10
 
 int main() {
-    int latch_pin = 10;
-    int clk_pin = 11;
-    int data_pin = 12;
+    // Set clk pin as output
+    gpio_init(CLK_PIN);
+    gpio_set_dir(CLK_PIN, GPIO_OUT);
+    
+    // Set data pin as output
+    gpio_init(DATA_PIN);
+    gpio_set_dir(DATA_PIN, GPIO_OUT);
 
-    gpio_init(latch_pin);
-    gpio_set_dir(latch_pin, GPIO_OUT);
-    gpio_init(clk_pin);
-    gpio_set_dir(clk_pin, GPIO_OUT);
-    gpio_init(data_pin);
-    gpio_set_dir(data_pin, GPIO_OUT);
+    // Set latch pin as output
+    gpio_init(LATCH_PIN);
+    gpio_set_dir(LATCH_PIN, GPIO_OUT);
 
-    shreg *myreg = new_shreg(clk_pin, data_pin, latch_pin);
+    // Create new shift register
+    struct shreg_74hc595_t *myreg = new_shreg_74hc595(CLK_PIN, DATA_PIN, LATCH_PIN);
     
     while (1) {
-
-        shreg_put(myreg, QA, 1);
-        sleep_ms(500);
-        shreg_put(myreg, QB, 1);
-        sleep_ms(500);
-        shreg_put(myreg, QC, 1);
-        sleep_ms(500);
-        shreg_put(myreg, QD, 1);
-        sleep_ms(500);
-        shreg_put(myreg, QE, 1);
-        sleep_ms(500);
-        shreg_put(myreg, QF, 1);
-        sleep_ms(500);
-        shreg_put(myreg, QG, 1);
-        sleep_ms(500);
-        shreg_put(myreg, QH, 1);
-        sleep_ms(500);
-        
-        shreg_put(myreg, QA, 0);
-        sleep_ms(500);
-        shreg_put(myreg, QB, 0);
-        sleep_ms(500);
-        shreg_put(myreg, QC, 0);
-        sleep_ms(500);
-        shreg_put(myreg, QD, 0);
-        sleep_ms(500);
-        shreg_put(myreg, QE, 0);
-        sleep_ms(500);
-        shreg_put(myreg, QF, 0);
-        sleep_ms(500);
-        shreg_put(myreg, QG, 0);
-        sleep_ms(500);
-        shreg_put(myreg, QH, 0);
-        sleep_ms(500);
-
+        for (size_t qi = QA; qi <= QH; qi++) {
+            shreg_74hc595_put(myreg, qi, 1);
+            sleep_ms(500);
+        }
+        for (size_t qi = QA; qi <= QH; qi++) {
+            shreg_74hc595_put(myreg, qi, 0);
+            sleep_ms(500);
+        }
     }
 }
