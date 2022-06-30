@@ -48,7 +48,7 @@ int main() {
     gpio_set_dir(LATCH_PIN, GPIO_OUT);
 
     // Create new shift register
-    struct shreg_74hc595_t *myreg = new_shreg_74hc595(CLK_PIN, DATA_PIN, LATCH_PIN);
+    struct shift_register_74hc595_t *myreg = new_shreg_74hc595(CLK_PIN, DATA_PIN, LATCH_PIN);
     
     while (1) {
         for (size_t qi = QA; qi <= QH; qi++) {
