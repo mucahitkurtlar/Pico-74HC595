@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.12)
 # Pull in pico SDK (must before project)
 include(pico_sdk_import.cmake)
 
-project(shift_register_74hc595 C CXX ASM)
+project(sr_74hc595 C CXX ASM)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
 
@@ -17,7 +17,7 @@ add_executable(${PROJECT_NAME}
     )
 
 # Pull in our pico_stdib which pulls common
-target_link_libraries(shift_register_74hc595 pico_stdlib)
+target_link_libraries(sr_74hc595 pico_stdlib)
 
 # Create map/bin/hes file etc.
-pico_add_extra_outputs(shift_register_74hc595)
+pico_add_extra_outputs(sr_74hc595)

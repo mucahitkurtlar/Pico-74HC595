@@ -1,5 +1,8 @@
 /*
-74HC595 test code. Tests QA, QB, QC, QD, QE, QF, QG and QH outs with custom library written by Mücahit KURTLAR.
+author: Mücahit KURTLAR
+license: GNU GENERAL PUBLIC LICENSE Version 3
+
+74HC595 test code. Tests QA, QB, QC, QD, QE, QF, QG and QH outs with custom library.
     ___   ___
 QB  |  |_|  |   VCC
 QC  |       |   QA
@@ -21,24 +24,21 @@ RCLK        GP10
 SRCLK       GP11
 SRCLR       3.3V
 
-
-author: Mücahit KURTLAR
-license: GNU GENERAL PUBLIC LICENSE Version 3
 */
 
+#include "../../include/sr_74hc595.h"
 #include "pico/stdlib.h"
-#include "../../src/shift_register_74hc595.h"
 
 // Define shift register pins
-#define CLK_PIN 11
-#define DATA_PIN 12
+#define CLK_PIN   11
+#define DATA_PIN  12
 #define LATCH_PIN 10
 
 int main() {
     // Set clk pin as output
     gpio_init(CLK_PIN);
     gpio_set_dir(CLK_PIN, GPIO_OUT);
-    
+
     // Set data pin as output
     gpio_init(DATA_PIN);
     gpio_set_dir(DATA_PIN, GPIO_OUT);
@@ -48,15 +48,17 @@ int main() {
     gpio_set_dir(LATCH_PIN, GPIO_OUT);
 
     // Create new shift register
-    struct shift_register_74hc595_t *myreg = new_shreg_74hc595(CLK_PIN, DATA_PIN, LATCH_PIN);
-    
+    sr_74hc595_t sr_74hc595 = new_sr_74hc595(CLK_PIN, DATA_PIN, LATCH_PIN);
+
     while (1) {
         for (size_t qi = QA; qi <= QH; qi++) {
-            shreg_74hc595_put(myreg, qi, 1);
+            // Put 1 to the given pin
+            sr_74hc595_put(&sr_74hc595, qi, 1);
             sleep_ms(500);
         }
         for (size_t qi = QA; qi <= QH; qi++) {
-            shreg_74hc595_put(myreg, qi, 0);
+            // Put 0 to the given pin
+            sr_74hc595_put(&sr_74hc595, qi, 0);
             sleep_ms(500);
         }
     }
